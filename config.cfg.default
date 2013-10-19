@@ -1,0 +1,6 @@
+[reddit]
+user_agent = %(username)s
+username = username
+password = password
+subreddit = subreddit
+link_id = link_id
