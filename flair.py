@@ -17,7 +17,7 @@ flat_comments = praw.helpers.flatten_tree(submission.comments)
 
 for comment in flat_comments:
 
-	if 'second' in comment.body and comment.is_root == False:
+	if 'confirm' in comment.body and comment.is_root == False:
 
 		parent = [com for com in flat_comments if com.fullname == comment.parent_id][0]
 
