@@ -22,26 +22,26 @@ for comment in flat_comments:
 		parent = [com for com in flat_comments if com.fullname == comment.parent_id][0]
 
 		if comment.author_flair_css_class or comment.author_flair_text:
-			child_css = str(int(comment.author_flair_css_class) + 1)
+			child_css = int(comment.author_flair_css_class)
 			child_text = comment.author_flair_text
 		if not comment.author_flair_css_class:
-			child_css = '1'
+			child_css = '0'
 		if not comment.author_flair_text:
 			child_text = ''
 			
 
 		if parent.author_flair_css_class or parent.author_flair_text:
-			parent_css = str(int(parent.author_flair_css_class) + 1)
+			parent_css = int(parent.author_flair_css_class)
 			parent_text = parent.author_flair_text
 		if not parent.author_flair_css_class:
-			parent_css = '1'
+			parent_css = '0'
 		if not parent.author_flair_text:
 			parent_text = ''
 
-		comment.subreddit.set_flair(comment.author, child_text, child_css)
+		comment.subreddit.set_flair(comment.author, child_text, str(child_css + 1))
 		comment.author_flair_css_class = child_css
 		print 'Changed Child CSS'
 
-		parent.subreddit.set_flair(parent.author, parent_text, parent_css)
+		parent.subreddit.set_flair(parent.author, parent_text, str(parent_css + 1))
 		parent.author_flair_css_class = parent_css
 		print 'Changed Parent CSS'
