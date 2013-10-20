@@ -17,30 +17,31 @@ flat_comments = praw.helpers.flatten_tree(submission.comments)
 
 for comment in flat_comments:
 
-	if comment.body == 'second' and comment.is_root == False:
+	if 'second' in comment.body and comment.is_root == False:
 
-		parent_comment = [com for com in flat_comments if com.fullname == comment.parent_id][0]
+		parent = [com for com in flat_comments if com.fullname == comment.parent_id][0]
 
 		if comment.author_flair_css_class or comment.author_flair_text:
 			child_css = str(int(comment.author_flair_css_class) + 1)
 			child_text = comment.author_flair_text
-		elif not comment.author_flair_css_class:
+		if not comment.author_flair_css_class:
 			child_css = '1'
-		elif not comment.author_flair_text:
-			child_text = 'Empty'
+		if not comment.author_flair_text:
+			child_text = ''
 			
 
-		if parent_comment.author_flair_css_class or parent_comment.author_flair_text:
-			parent_css = str(int(parent_comment.author_flair_css_class) + 1)
-			parent_text = parent_comment.author_flair_text
-		elif not parent_comment.author_flair_css_class:
+		if parent.author_flair_css_class or parent.author_flair_text:
+			parent_css = str(int(parent.author_flair_css_class) + 1)
+			parent_text = parent.author_flair_text
+		if not parent.author_flair_css_class:
 			parent_css = '1'
-		elif not parent_comment.author_flair_text:
-			parent_text = 'Empty'
+		if not parent.author_flair_text:
+			parent_text = ''
 
 		comment.subreddit.set_flair(comment.author, child_text, child_css)
 		comment.author_flair_css_class = child_css
 		print 'Changed Child CSS'
-		parent_comment.subreddit.set_flair(parent_comment.author, parent_text, parent_css)
-		parent_comment.author_flair_css_class = parent_css
+
+		parent.subreddit.set_flair(parent.author, parent_text, parent_css)
+		parent.author_flair_css_class = parent_css
 		print 'Changed Parent CSS'
