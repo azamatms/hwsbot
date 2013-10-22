@@ -16,8 +16,10 @@ submission = r.get_submission(submission_id=cfg_file.get('reddit', 'link_id'))
 flat_comments = praw.helpers.flatten_tree(submission.comments)
 
 for comment in flat_comments:
-
-	if 'confirm' in comment.body and comment.is_root == False:
+	
+	already_done = set()
+	
+	if 'confirm' in comment.body and comment.is_root == False and comment.id not in already_done:
 
 		parent = [com for com in flat_comments if com.fullname == comment.parent_id][0]
 
@@ -40,6 +42,7 @@ for comment in flat_comments:
 
 		comment.subreddit.set_flair(comment.author, child_text, child_css)
 		comment.author_flair_css_class = child_css
+		already_done.add(comment.id)
 		print 'Changed Child CSS'
 
 		parent.subreddit.set_flair(parent.author, parent_text, parent_css)
