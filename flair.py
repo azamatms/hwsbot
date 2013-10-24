@@ -16,8 +16,8 @@ submission = r.get_submission(submission_id=cfg_file.get('reddit', 'link_id'))
 flat_comments = praw.helpers.flatten_tree(submission.comments)
 
 for comment in flat_comments:
-
-	if 'confirm' in comment.body and comment.is_root == False:
+	
+	if 'confirm' in comment.body and comment.is_root == False and 'first' in parent.body:
 
 		parent = [com for com in flat_comments if com.fullname == comment.parent_id][0]
 
@@ -40,8 +40,27 @@ for comment in flat_comments:
 
 		if comment.author == parent.author:
 			comment.reply('You have confirmed a trade under your own post, this action has been reported to the Moderators')
-		# elif comment.author.score <= 4999:
-			# comment.reply('You do not have enough link karma')
+			comment.report()		
+			parent.report()
+
+		elif comment.author.link_karma + comment.author.comment_karma <= 25:
+			comment.reply('You do not have enough link karma')
+			comment.report()
+
+		elif parent.author.link_karma + parent.author.comment_karma <= 25:
+			parent.reply('You do not have enough link karma')
+			parent.report()
+
+		elif comment.author_flair_css_class == 'mod':
+			for com in flat_comments:
+				if com.author == parent.author:
+					com.author_flair_css_class = parent_css
+
+		elif parent.author_flair_css_class == 'mod':
+			for com in flat_comments:
+				if com.author == child.author:
+					com.author_flair_css_class = child_css
+		
 		else:
 			comment.subreddit.set_flair(comment.author, child_text, child_css)
 			for com in flat_comments:
@@ -54,4 +73,3 @@ for comment in flat_comments:
 				if com.author == parent.author:
 					com.author_flair_css_class = parent_css
 			print 'Changed Parent CSS'
-			
