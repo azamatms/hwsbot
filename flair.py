@@ -40,8 +40,8 @@ for comment in flat_comments:
 
 		if comment.author == parent.author:
 			comment.reply('You have confirmed a trade under your own post, this action has been reported to the Moderators')
-		elif comment.author.score <= 4999:
-			comment.reply('You do not have enough link karma')
+		# elif comment.author.score <= 4999:
+			# comment.reply('You do not have enough link karma')
 		else:
 			comment.subreddit.set_flair(comment.author, child_text, child_css)
 			for com in flat_comments:
