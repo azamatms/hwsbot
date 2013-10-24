@@ -38,7 +38,11 @@ for comment in flat_comments:
 		if not parent.author_flair_text:
 			parent_text = ''
 
-		if comment.author != parent.author:
+		if comment.author == parent.author:
+			comment.reply('You have confirmed a trade under your own post, this action has been reported to the Moderators')
+		elif comment.author.score <= 4999:
+			comment.reply('You do not have enough link karma')
+		else:
 			comment.subreddit.set_flair(comment.author, child_text, child_css)
 			for com in flat_comments:
 				if com.author == comment.author:
@@ -50,5 +54,4 @@ for comment in flat_comments:
 				if com.author == parent.author:
 					com.author_flair_css_class = parent_css
 			print 'Changed Parent CSS'
-		else:
-			comment.reply('You have confirmed a trade under your own post, this action has been reported to the Moderators')
+			
