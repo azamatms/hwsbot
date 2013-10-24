@@ -39,9 +39,10 @@ for comment in flat_comments:
 			parent_text = ''
 
 		comment.subreddit.set_flair(comment.author, child_text, child_css)
-		for com in flat_comments and if comment.author not parent.author:
-			if com.author == comment.author:
-				com.author_flair_css_class = child_css
+		if comment.author not parent.author:
+			for com in flat_comments
+				if com.author == comment.author:
+					com.author_flair_css_class = child_css
 		print 'Changed Child CSS'
 
 		parent.subreddit.set_flair(parent.author, parent_text, parent_css)
