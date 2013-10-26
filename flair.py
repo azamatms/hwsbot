@@ -42,8 +42,6 @@ for comment in flat_comments:
 		if not parent.author_flair_text:
 			parent_text = ''
 
-
-
 		# Prevent users from confirming under their own comments
 		if comment.author == parent.author:
 			comment.reply('You have confirmed a trade under your own post, this action has been reported to the Moderators')
@@ -76,10 +74,10 @@ for comment in flat_comments:
 			for com in flat_comments:
 				if com.author == comment.author:
 					com.author_flair_css_class = child_css
-			logging.debug('Changed Child CSS')
+			logging.info('Changed Child CSS')
 			
 			parent.subreddit.set_flair(parent.author, parent_text, parent_css)
 			for com in flat_comments:
 				if com.author == parent.author:
 					com.author_flair_css_class = parent_css
-			logging.debug('Changed Parent CSS')
+			logging.info('Changed Parent CSS')

@@ -4,3 +4,6 @@ username = username
 password = password
 subreddit = subreddit
 link_id = link_id
+
+[logging]
+level = WARN
