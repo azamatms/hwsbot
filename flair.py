@@ -45,7 +45,7 @@ for comment in flat_comments:
 		# Prevent users from confirming under their own comments
 		if comment.author == parent.author:
 			comment.reply('You have confirmed a trade under your own post, this action has been reported to the Moderators')
-			comment.report()		
+			comment.report()	
 			parent.report()
 
 		#Karma check verification
