@@ -19,6 +19,7 @@ r.login(cfg_file.get('reddit', 'username'), cfg_file.get('reddit', 'password'))
 subreddit = cfg_file.get('reddit', 'subreddit')
 submission = r.get_submission(submission_id=cfg_file.get('reddit', 'link_id'))
 
+# get all comments
 flat_comments = praw.helpers.flatten_tree(submission.comments)
 
 for comment in flat_comments:
