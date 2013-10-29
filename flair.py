@@ -49,7 +49,7 @@ for comment in flat_comments:
 			comment.report()	
 			parent.report()
 
-		#Karma check verification
+		# Karma check verification
 		elif comment.author.link_karma + comment.author.comment_karma < 0:
 			comment.reply('You do not have enough link karma')
 			comment.report()
