@@ -1,7 +1,7 @@
 import sys, os
-import praw
 from ConfigParser import SafeConfigParser
 import logging
+import praw
 import re
 
 # load config file
@@ -26,6 +26,6 @@ for comment in flat_comments:
 
 	if comment.is_root == True:
 
-		url = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', comment.body)
+		url = re.findall('http[s]?://heatware.com/eval.php?id=[0-9][0-9][0-9][0-9][0-9][0-9]', comment.body)
 
 		print url
