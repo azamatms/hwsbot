@@ -1,7 +1,7 @@
 import sys, os
-import praw
 from ConfigParser import SafeConfigParser
 import logging
+import praw
 
 # load config file
 containing_dir = os.path.abspath(os.path.dirname(sys.argv[0]))
@@ -19,20 +19,26 @@ r.login(cfg_file.get('reddit', 'username'), cfg_file.get('reddit', 'password'))
 subreddit = cfg_file.get('reddit', 'subreddit')
 submission = r.get_submission(submission_id=cfg_file.get('reddit', 'link_id'))
 
-# get all comments
+with open ("id.txt", "r") as myfile:
+    completed=myfile.read()
+
 flat_comments = praw.helpers.flatten_tree(submission.comments)
 
 for comment in flat_comments:
 	
-	if 'confirm' in comment.body and comment.is_root == False:
+	content = comment.body
+
+	if 'confirm' in content.lower() and comment.is_root == False and comment.id not in completed:
 
 		parent = [com for com in flat_comments if com.fullname == comment.parent_id][0]
-
-		if comment.author_flair_text or comment.author_flair_css_class:
+		
+		if comment.author_flair_css_class:
 			child_css = str(int(comment.author_flair_css_class) + 1)
+		if comment.author_flair_text:
 			child_text = comment.author_flair_text
-		if parent.author_flair_text or parent.author_flair_css_class:
+		if parent.author_flair_css_class:
 			parent_css = str(int(parent.author_flair_css_class) + 1)
+		if parent.author_flair_text:
 			parent_text = parent.author_flair_text
 		if not comment.author_flair_css_class:
 			child_css = '1'
@@ -57,17 +63,6 @@ for comment in flat_comments:
 		elif parent.author.link_karma + parent.author.comment_karma < 0:
 			parent.reply('You do not have enough link karma')
 			parent.report()
-
-		# Make sure mod flair_css does not change
-		elif comment.author_flair_css_class == 'mod':
-			for com in flat_comments:
-				if com.author == parent.author:
-					com.author_flair_css_class = parent_css
-
-		elif parent.author_flair_css_class == 'mod':
-			for com in flat_comments:
-				if com.author == child.author:
-					com.author_flair_css_class = child_css
 		
 		# The regular actions
 		else:
@@ -76,9 +71,13 @@ for comment in flat_comments:
 				if com.author == comment.author:
 					com.author_flair_css_class = child_css
 			logging.info('Changed Child CSS')
-			
+			comment.reply('added')
+
 			parent.subreddit.set_flair(parent.author, parent_text, parent_css)
 			for com in flat_comments:
 				if com.author == parent.author:
 					com.author_flair_css_class = parent_css
 			logging.info('Changed Parent CSS')
+
+		with open("id.txt", "a") as myfile:
+ 			myfile.write('%s\n' % comment.id)
