@@ -32,10 +32,12 @@ for comment in flat_comments:
 	
 	content = comment.body
 
-	if 'confirm' in content.lower() and comment.is_root == False and comment.id not in completed and comment.author.name != 'hwsbot':
+	if 'confirm' in content.lower() and comment.is_root == False and comment.id not in completed and hasattr(comment.author, 'name'):
 
 		parent = [com for com in flat_comments if com.fullname == comment.parent_id][0]
 		account_date = datetime.utcfromtimestamp(comment.author.created_utc)
+		karma = comment.author.link_karma + comment.author.comment_karma
+
 		account_age = (datetime.utcnow() - account_date).days
 
 		# Flair Flair CSS
@@ -44,7 +46,7 @@ for comment in flat_comments:
 		elif comment.author_flair_css_class and 'mod' in comment.author_flair_css_class:
 			child_css = comment.author_flair_css_class
 		else:
-			child_css = str(int( comment.author_flair_css_class) + 1)
+			child_css = str(int(comment.author_flair_css_class) + 1)
 		# Child Flair Text
 		if not comment.author_flair_text:
 			child_text = ''
@@ -70,22 +72,23 @@ for comment in flat_comments:
 			comment.report()	
 			parent.report()
 
-		if account_age < 14:
-			comment.reply('Your account has been created recently and has been reported to the moderators')
+		if account_age < 14 or karma < 10 and child_css > 1:
+			comment.reply('Your account has been created recently, this has been sent for further review')
 			comment.report()
 
 		# The regular actions
 		else:
 			comment.subreddit.set_flair(comment.author, child_text, child_css)
-			for com in flat_comments:
-				if com.author.name == comment.author.name:
-					com.author_flair_css_class = child_css
-			comment.reply('added')
-
 			parent.subreddit.set_flair(parent.author, parent_text, parent_css)
+
+
 			for com in flat_comments:
-				if com.author.name == parent.author.name:
-					com.author_flair_css_class = parent_css
+				if hasattr(com.author, 'name'):
+					if com.author.name == comment.author.name:
+						com.author_flair_css_class = child_css
+					if com.author.name == parent.author.name:
+						com.author_flair_css_class = parent_css
+			comment.reply('added')
 
 		with open("id.txt", "a") as myfile:
  			myfile.write('%s\n' % comment.id)
