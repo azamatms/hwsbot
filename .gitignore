@@ -1,2 +1,3 @@
 config.cfg
-id.txt
+*.id.txt
+actions.log
