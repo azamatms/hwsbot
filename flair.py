@@ -15,16 +15,16 @@ cfg_file.read(path_to_cfg)
 username = cfg_file.get('reddit', 'username')
 password = cfg_file.get('reddit', 'password')
 subreddit = cfg_file.get('reddit', 'subreddit')
-link_id = cfg_file.get('reddit', 'link_id')
-equal_warning = cfg_file.get('replies', 'equal')
-age_warning = cfg_file.get('replies', 'age')
-karma_warning = cfg_file.get('replies', 'karma')
-added_msg = cfg_file.get('replies', 'added')
+link_id = cfg_file.get('trade', 'link_id')
+equal_warning = cfg_file.get('trade', 'equal')
+age_warning = cfg_file.get('trade', 'age')
+karma_warning = cfg_file.get('trade', 'karma')
+added_msg = cfg_file.get('trade', 'added')
 
 #configure logging
-logging.basicConfig(level=logging.INFO, filename='actions.log')
-
-
+logging.basicConfig(level=logging.INFO, filename='actions.log', format='%(asctime)s - %(message)s')
+requests_log = logging.getLogger("requests")
+requests_log.setLevel(logging.WARNING)
 
 def main():
 
@@ -109,13 +109,17 @@ def main():
 
 			for comment in flat_comments:
 
-				if not conditions(): continue
+				if not conditions():
+					continue
 				parent = [com for com in flat_comments if com.fullname == comment.parent_id][0]
-				if not check_self_reply(): continue
+				if not check_self_reply():
+					continue
 
 				# Check Account Age and Karma
-				if not verify(comment): continue
-				if not verify(parent): continue
+				if not verify(comment):
+					continue
+				if not verify(parent):
+					continue
 
 				# Get Future Values to Flair
 				values(comment)
@@ -127,11 +131,11 @@ def main():
 				comment.reply(added_msg)
 				save()
 
-		# I have no idea what this does, but I need an except
-		except Exception as e:
-			logging.error(e)
-			
+		except:
+			logging.warn('I\'ve made a huge little mistake...')
+		
+		logging.info('Sleeping for 5 minutes')
 		sleep(300)
 
 if __name__ == '__main__':
-    main()
+	main()
