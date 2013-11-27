@@ -15,6 +15,7 @@ cfg_file.read(path_to_cfg)
 username = cfg_file.get('reddit', 'username')
 password = cfg_file.get('reddit', 'password')
 subreddit = cfg_file.get('reddit', 'subreddit')
+multiprocess = cfg_file.get('reddit', 'multiprocess')
 link_id = cfg_file.get('trade', 'link_id')
 equal_warning = cfg_file.get('trade', 'equal')
 age_warning = cfg_file.get('trade', 'age')
@@ -99,7 +100,11 @@ def main():
 
 			# Log in
 			logging.info('Logging in as /u/'+username)
-			r = praw.Reddit(user_agent=username)
+			if multiprocess == 'true':
+				handler = MultiprocessHandler()
+				r = praw.Reddit(user_agent=username, handler=handler)
+			else:
+				r = praw.Reddit(user_agent=username)
 			r.login(username, password)
 
 			# Get the submission and the comments
@@ -131,8 +136,9 @@ def main():
 				comment.reply(added_msg)
 				save()
 
-		except:
-			logging.warn('I\'ve made a huge little mistake...')
+		except Exception as e:
+			logging.error(e)
+			break
 		
 		logging.info('Sleeping for 5 minutes')
 		sleep(300)

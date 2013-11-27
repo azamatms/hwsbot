@@ -9,6 +9,9 @@ containing_dir = os.path.abspath(os.path.dirname(sys.argv[0]))
 cfg_file = SafeConfigParser()
 path_to_cfg = os.path.join(containing_dir, 'config.cfg')
 cfg_file.read(path_to_cfg)
+username = cfg_file.get('reddit', 'username')
+password = cfg_file.get('reddit', 'password')
+multiprocess = cfg_file.get('reddit', 'multiprocess')
 
 #configure logging
 logging.basicConfig(level=logging.INFO, filename='actions.log')
@@ -18,11 +21,14 @@ requests_log.setLevel(logging.WARNING)
 
 def main():
 	while True:
-		try
-			reddit_username = cfg_file.get('reddit', 'username')
-			logging.info('Logging in as /u/'+reddit_username)
-			r = praw.Reddit(user_agent=cfg_file.get('reddit', 'user_agent'))
-			r.login(cfg_file.get('reddit', 'username'), cfg_file.get('reddit', 'password'))
+		try:
+			logging.info('Logging in as /u/'+username)
+			if multiprocess == 'true':
+				handler = MultiprocessHandler()
+				r = praw.Reddit(user_agent=username, handler=handler)
+			else:
+				r = praw.Reddit(user_agent=username)
+			r.login(username, password)
 			subreddit = cfg_file.get('reddit', 'subreddit')
 
 
@@ -47,8 +53,9 @@ def main():
 							comment.reply('added')
 			logging.info('Sleeping for 10 minutes')
 			sleep(600)
-		except:
-			logging.info('I\'ve made a huge little mistake...')
+		except Exception as e:
+			logging.error(e)
+			break
 
 if __name__ == '__main__':
 	main()
