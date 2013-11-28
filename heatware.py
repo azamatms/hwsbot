@@ -42,7 +42,7 @@ def main():
 				if not hasattr(comment, 'author'):
 					continue
 				if comment.is_root == True:
-					heatware = re.search('(http://(?:www\.)?heatware\.com/eval\.php\?id=\d{5,7})', comment.body)
+					heatware = re.search('(http://(?:www\.)?heatware\.com/eval\.php\?id=\d{1,7})', comment.body)
 					if heatware:
 						url = heatware.group(0)
 						if not comment.author_flair_text:

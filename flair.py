@@ -21,7 +21,6 @@ equal_warning = cfg_file.get('trade', 'equal')
 age_warning = cfg_file.get('trade', 'age')
 karma_warning = cfg_file.get('trade', 'karma')
 added_msg = cfg_file.get('trade', 'added')
-keywords = cfg_file.get('trade', 'keywords')
 
 #configure logging
 logging.basicConfig(level=logging.INFO, filename='actions.log', format='%(asctime)s - %(message)s')
@@ -35,7 +34,7 @@ def main():
 			return False
 		if not hasattr(comment.author, 'name'):
 			return False
-		if keywords in comment.body.lower():
+		if 'confirm' not in comment.body.lower():
 			return False
 		if comment.author.name == username:
 			return False
