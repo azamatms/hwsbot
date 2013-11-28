@@ -138,7 +138,6 @@ def main():
 
 		except Exception as e:
 			logging.error(e)
-			break
 		
 		logging.info('Sleeping for 5 minutes')
 		sleep(300)
