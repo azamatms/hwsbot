@@ -35,7 +35,7 @@ def main():
 			return False
 		if not hasattr(comment.author, 'name'):
 			return False
-		if comment.body.lower() not in keywords:
+		if keywords in comment.body.lower():
 			return False
 		if comment.author.name == username:
 			return False
