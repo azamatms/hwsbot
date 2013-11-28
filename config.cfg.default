@@ -11,6 +11,7 @@ equal = You have confirmed a trade under your own post, this action has been rep
 age = Your account has been created recently, this has been sent for further review.
 karma = You do not have enough karma, this has been sent for further review.
 added = added
+keywords = confirm, traded, sold
 
 [heatware]
 link_id = link_id
