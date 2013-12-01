@@ -22,7 +22,7 @@ age_warning = cfg_file.get('trade', 'age')
 karma_warning = cfg_file.get('trade', 'karma')
 added_msg = cfg_file.get('trade', 'added')
 
-#configure logging
+# Configure logging
 logging.basicConfig(level=logging.INFO, filename='actions.log', format='%(asctime)s - %(message)s')
 requests_log = logging.getLogger("requests")
 requests_log.setLevel(logging.WARNING)
@@ -94,6 +94,9 @@ def main():
 
 	while True:
 		try:
+			# Reload cfg file
+			cfg_file.read(path_to_cfg)
+
 			# Load old comments
 			with open (link_id+".log", 'a+') as myfile:
 				completed = myfile.read()
@@ -138,9 +141,8 @@ def main():
 
 		except Exception as e:
 			logging.error(e)
-		
-		logging.info('Sleeping for 5 minutes')
-		sleep(300)
+
+		sleep(float(cfg_file.get('trade', 'sleep')))
 
 if __name__ == '__main__':
 	main()
